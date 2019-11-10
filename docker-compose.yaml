@@ -1,0 +1,57 @@
+version: '3.7'
+
+networks:
+    code-network:
+        driver: bridge
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+        - "80:80"
+    volumes:
+        - ${PROJECTS_PATH}:/repo
+        - ./nginx/sites:/etc/nginx/conf.d/
+    networks:
+        - code-network
+
+  php70:
+    build: ./php/70
+    volumes:
+        - ${PROJECTS_PATH}:/repo
+    networks:
+        - code-network
+
+  php73:
+    build: ./php/73
+    volumes:
+        - ${PROJECTS_PATH}:/repo
+    networks:
+        - code-network
+
+  php56:
+    build: ./php/56
+    volumes:
+        - ${PROJECTS_PATH}:/repo
+    networks:
+        - code-network
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql
+    networks:
+        - code-network
+
+
+volumes:
+  my-db:
