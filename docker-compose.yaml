@@ -57,6 +57,11 @@ services:
     ports:
       - '9200:9200'
       - '9300:9300'
+    tty : true
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
     networks:
       - code-network
   
@@ -69,3 +74,4 @@ services:
 
 volumes:
   my-db: null
+  es-data:
