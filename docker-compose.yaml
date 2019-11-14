@@ -64,6 +64,11 @@ services:
       - discovery.type=single-node
     networks:
       - code-network
+
+  elastichq:
+    image: 'elastichq/elasticsearch-hq:latest'
+    ports:
+      - '5000:5000'
   
   redis:
     image: 'bitnami/redis:latest'
