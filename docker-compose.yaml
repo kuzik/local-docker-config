@@ -22,8 +22,8 @@ services:
     networks:
       - code-network
   
-  php73:
-    build: ./php/73
+  php:
+    build: ./php/default
     volumes:
       - '${PROJECTS_PATH}:/repo'
     networks:
@@ -69,7 +69,19 @@ services:
     image: 'elastichq/elasticsearch-hq:latest'
     ports:
       - '5000:5000'
+    networks:
+      - code-network
   
+  blackfire:
+    image: blackfire/blackfire
+    environment:
+        - BLACKFIRE_CLIENT_ID
+        - BLACKFIRE_CLIENT_TOKEN
+        - BLACKFIRE_SERVER_ID
+        - BLACKFIRE_SERVER_TOKEN
+    networks:
+      - code-network
+
   redis:
     image: 'bitnami/redis:latest'
     environment:
