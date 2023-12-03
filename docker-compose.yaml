@@ -14,28 +14,28 @@ services:
       - './nginx/sites:/etc/nginx/conf.d/'
     networks:
       - code-network
-  
-  php70:
-    build: ./php/70
-    volumes:
-      - '${PROJECTS_PATH}:/repo'
-    networks:
-      - code-network
-  
+
   php:
-    build: ./php/default
+    build: ./php/81
     volumes:
       - '${PROJECTS_PATH}:/repo'
     networks:
       - code-network
   
-  php56:
-    build: ./php/56
+  # php56:
+  #   build: ./php/56
+  #   volumes:
+  #     - '${PROJECTS_PATH}:/repo'
+  #   networks:
+  #     - code-network
+  
+
+  php74:
+    build: ./php/74
     volumes:
       - '${PROJECTS_PATH}:/repo'
     networks:
       - code-network
-  
   db:
     image: 'mysql:5.7'
     restart: always
@@ -52,43 +52,25 @@ services:
       - 'my-db:/var/lib/mysql'
     networks:
       - code-network
-  
-  elasticsearch:
-    image: 'elasticsearch:7.4.2'
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      ADMINER_DEFAULT_DB_DRIVER: mysql
+      ADMINER_DEFAULT_DB_HOST: db
     ports:
-      - '9200:9200'
-      - '9300:9300'
-    volumes:
-      - es-data:/usr/share/elasticsearch/data
-    environment:
-      - discovery.type=single-node
+      - 8080:8080
     networks:
       - code-network
 
-  elastichq:
-    image: 'elastichq/elasticsearch-hq:latest'
+  mailhog:
+    image: mailhog/mailhog
+    container_name: 'mailhog'
     ports:
-      - '5000:5000'
+      - "1025:1025"
+      - "8025:8025"
     networks:
       - code-network
-  
-  blackfire:
-    image: blackfire/blackfire
-    environment:
-        - BLACKFIRE_CLIENT_ID
-        - BLACKFIRE_CLIENT_TOKEN
-        - BLACKFIRE_SERVER_ID
-        - BLACKFIRE_SERVER_TOKEN
-    networks:
-      - code-network
-
-  redis:
-    image: 'bitnami/redis:latest'
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-    networks:
-      - code-network
-
 volumes:
   my-db: null
-  es-data:

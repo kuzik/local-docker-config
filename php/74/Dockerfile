@@ -1,4 +1,4 @@
-FROM php:7.0-fpm
+FROM php:7.4-fpm
 
 # install git
 RUN apt-get update && \
@@ -44,7 +44,6 @@ RUN docker-php-ext-install -j$(nproc) \
         gd \
         iconv \
         intl \
-        mbstring \
         opcache \
         pdo_mysql
 
@@ -58,3 +57,7 @@ RUN apt-get update && apt-get install -y \
 RUN echo "Install Composer"
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer --version
+
+RUN php -r "copy('https://phar.phpunit.de/phpunit.phar','/tmp/phpunit.phar');"
+RUN chmod +x /tmp/phpunit.phar
+RUN mv /tmp/phpunit.phar /usr/local/bin/phpunit
